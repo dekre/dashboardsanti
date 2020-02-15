@@ -1,0 +1,158 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- meta block -->
+    <title>Santi Dashboard - Login</title>
+    <!-- end meta block -->
+    <link
+      rel="stylesheet"
+      href="{% static 'css/dhtmlx/suite.css' %}"
+    />
+    <!-- <link
+      rel="stylesheet"
+      href="./Initialization - DHTMLX Form_files/form.css"
+    /> -->
+
+    <!-- custom sample head -->
+    <style>
+      .dhx_sample-container__widget {
+        padding: 0 50px;
+        height: 300px;
+        width: 300px;
+        position: fixed;
+        left: 40%;
+        top: 30%;
+      }
+
+	  .shadow {
+		box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.25);
+	}
+    </style>
+
+    <header class="dhx_sample-header">
+      <div class="dhx_sample-header__main"></div>
+    </header>
+
+    <body>
+      <section class="dhx_sample-container">
+        <form class="dhx_sample-container__widget" action="{% url 'login' %}" id="form-sample" method="POST">
+            {% csrf_token %} 
+          <div
+            class="dhx_widget dhx_layout dhx_layout-rows dhx_widget--bordered shadow dhx_layout-cell--gravity"
+            style="padding: 8px;"
+          >
+            <div
+              aria-labelledby="tab-content-u1581759807791"
+              class="dhx_layout-cell"
+            >
+              <div class="dhx_form-group ">
+                <label for="u1581759807791" class="dhx_label ">Name</label>
+                <div class="dhx_input__wrapper">
+                  <div class="dhx_input__container">
+                    <div class="dhx_input__icon dxi dxi-magnify"></div>
+                    <input
+                      id="u1581759807791"
+                      placeholder="Username"
+                      name="username"
+                      class="dhx_input dhx_input--icon-padding"
+                      autocomplete="off"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              aria-labelledby="tab-content-u1581759807795"
+              class="dhx_layout-cell"
+            >
+              <div class="dhx_form-group ">
+                <label for="u1581759807795" class="dhx_label ">Password</label>
+                <div class="dhx_input__wrapper">
+                  <div class="dhx_input__container">
+                    <input
+                      type="password"
+                      id="u1581759807795"
+                      placeholder="********"
+                      name="password"
+                      class="dhx_input "
+                      autocomplete="off"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div aria-labelledby="tab-content-agree" class="dhx_layout-cell">
+              <label class="dhx_checkbox dhx_form-group  dhx_form-group--inline"
+                ><input
+                  type="checkbox"
+                  id="agree"
+                  value="checkboxvalue"
+                  name="agree"
+                  class="dhx_checkbox__input"
+                /><span class="dhx_checkbox__visual-input"></span
+                ><span class="dhx_label ">Remember me</span></label
+              >
+            </div>
+            <div
+              aria-labelledby="tab-content-u1581759807798"
+              class="dhx_layout-cell"
+            >
+              <button
+                id="u1581759807798"
+                type="submit"
+                class="dhx_button dhx_button--color_primary dhx_button--size_medium dhx_button--view_flat"
+              >
+                <span class="dhx_button__text">Login</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <script>
+        var form = new dhx.Form("form-sample", {
+          css: "dhx_widget--bordered",
+          rows: [
+            {
+              type: "input",
+              gravity: false,
+              label: "Username",
+              icon: "dxi dxi-magnify",
+              placeholder: "Username",
+              name: "username"
+            },
+            {
+              type: "input",
+              gravity: false,
+              inputType: "password",
+              label: "Password",
+              placeholder: "********",
+              name: "password"
+            },
+            {
+              type: "checkbox",
+              gravity: false,
+              label: "I Remember me",
+              labelPosition: "right",
+              value: "checkboxvalue",
+              id: "remember",
+              name: "remember"
+            },
+            {
+              type: "button",
+              gravity: false,
+              value: "Login",
+              size: "medium",
+              view: "flat",
+              submit: true,
+              color: "primary"
+            }
+          ]
+        });
+      </script>
+    </body>
+  </head>
+</html>
