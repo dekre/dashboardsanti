@@ -1,323 +1,142 @@
 {% load static %}
 
 <!DOCTYPE html>
-
 <html>
   <head>
-    <title>How to Start with dhtmlxSidebar</title>
+    <!-- meta block -->
+    <title>Custom HTML - DHTMLX Sidebar</title>
+    <meta
+      name="description"
+      content="Check interactive samples of DHTMLX Sidebar to explore its configuration and other details."
+    />
+    <!-- end meta block -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+      charset="utf-8"
+    />
     <script
       type="text/javascript"
       src="{% static 'js/dhtmlx/suite.js' %}"
     ></script>
     <link rel="stylesheet" href="{% static 'css/dhtmlx/suite.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/dhtmlx/common/index.css' %}" />
+    <link
+      rel="stylesheet"
+      href="{% static 'css/dhtmlx/common/sidebar.css' %}"
+    />
+
+    <!-- custom sample head -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/4.4.95/css/materialdesignicons.css?v=6.4.1"
+      media="all"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <style>
+      .dhx_navbar--vertical {
+        overflow: hidden;
+      }
+      .user-info_container {
+        padding-top: 8px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+      }
+      .user-info_avatar {
+        height: 40px;
+        width: 40px;
+      }
+      .user-info_title {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 24px;
+        margin-top: 8px;
+      }
+      .user-info_contact {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 20px;
+        margin-bottom: 28px;
+        color: rgba(0, 0, 0, 0.5);
+      }
+      .dhx_sidebar--minimized .user-info_avatar {
+        height: 30px;
+        width: 30px;
+      }
+
+      .dhx_sidebar--minimized .user-info_title,
+      .dhx_sidebar--minimized .user-info_contact {
+        visibility: hidden;
+      }
+    </style>
   </head>
 
   <body>
-    <div id="demo_root">
-      <div
-        class="dhx_widget dhx_layout dhx_layout-rows dhx_layout-cell--bordered dhx_layout-cell--gravity"
-        style="height: 675px; width: 1220px;"
-      >
-        <div aria-labelledby="tab-content-toolbar-demo" class="dhx_layout-cell">
-          <nav
-            class="dhx_widget dhx_toolbar dhx_widget--border_bottom dhx_widget--bg_white"
-          >
-            <ul
-              dhx_widget_id="u1581766825604"
-              tabindex="0"
-              class="dhx_navbar dhx_navbar--horizontal"
-            >
-              <li class="dhx_toolbar__item">
-                <button
-                  class="dhx_button  dhx_button--color_secondary dhx_button--size_medium dhx_button--view_link dhx_button--circle dhx_button--icon"
-                  dhx_id="toggle"
-                  type="button"
-                >
-                  <span class="dhx_button__icon mdi mdi-menu"></span>
-                </button>
-              </li>
-              <li class="dhx_toolbar__item">
-                <span class="dhx_navbar-title dhx_navbar-title--toolbar"
-                  >DHTMLX Sidebar demo</span
-                >
-              </li>
-              <li class="dhx_toolbar__item dhx_toolbar__item--spacer"></li>
-            </ul>
-          </nav>
-        </div>
-        <div
-          class="dhx_layout-cell dhx_layout-columns dhx_layout-cell--gravity"
-        >
-          <div
-            aria-labelledby="tab-content-sidebar-demo"
-            class="dhx_layout-cell"
-          >
-            <nav
-              class="dhx_widget dhx_sidebar dhx_widget--border_right dhx_widget--bg_white"
-              style="width: 200px;"
-            >
-              <ul
-                dhx_widget_id="u1581766825602"
-                tabindex="0"
-                class="dhx_navbar dhx_navbar--vertical"
-              >
-                <li class="dhx_sidebar__item user-info_item" dhx_id="userInfo">
-                  <div class="user-info_container">
-                    <img
-                      class="user-info_avatar"
-                      src="./JavaScript Vertical Navigation Menu - dhtmlxSidebar_files/ava.png"
-                    />
-                    <div class="user-info_title">Gloria McKinney</div>
-                    <div class="user-info_contact">@gmckinney</div>
-                  </div>
-                </li>
-                <li class="dhx_sidebar__item">
-                  <button
-                    class="dhx_button dhx_sidebar-button"
-                    dhx_id="dashboard"
-                    type="button"
-                  >
-                    <span
-                      class="mdi mdi-view-dashboard dhx_sidebar-button__icon"
-                    ></span
-                    ><span class="dhx_sidebar-button__text">Dashboard</span>
-                  </button>
-                </li>
-                <li class="dhx_sidebar__item">
-                  <button
-                    class="dhx_button dhx_sidebar-button"
-                    dhx_id="statistics"
-                    type="button"
-                  >
-                    <span
-                      class="mdi mdi-chart-line dhx_sidebar-button__icon"
-                    ></span
-                    ><span class="dhx_sidebar-button__text">Statistics</span>
-                  </button>
-                </li>
-                <li class="dhx_sidebar__item">
-                  <button
-                    class="dhx_button dhx_sidebar-button"
-                    dhx_id="reports"
-                    type="button"
-                  >
-                    <span
-                      class="mdi mdi-file-chart dhx_sidebar-button__icon"
-                    ></span
-                    ><span class="dhx_sidebar-button__text">Reports</span>
-                  </button>
-                </li>
-                <li class="dhx_sidebar__item dhx_sidebar__item--separator"></li>
-                <li class="dhx_sidebar__item">
-                  <button
-                    class="dhx_button dhx_sidebar-button dhx_sidebar-button--select"
-                    dhx_id="posts"
-                    type="button"
-                  >
-                    <span
-                      class="mdi mdi-square-edit-outline dhx_sidebar-button__icon"
-                    ></span
-                    ><span class="dhx_sidebar-button__text">Posts</span
-                    ><span
-                      class="dxi dxi-menu-right  dhx_sidebar-button__caret"
-                    ></span>
-                  </button>
-                </li>
-                <li class="dhx_sidebar__item">
-                  <button
-                    class="dhx_button dhx_sidebar-button dhx_sidebar-button--select"
-                    dhx_id="pages"
-                    type="button"
-                  >
-                    <span
-                      class="mdi mdi-file-outline dhx_sidebar-button__icon"
-                    ></span
-                    ><span class="dhx_sidebar-button__text">Pages</span
-                    ><span
-                      class="dxi dxi-menu-right  dhx_sidebar-button__caret"
-                    ></span>
-                  </button>
-                </li>
-                <li class="dhx_sidebar__item">
-                  <button
-                    class="dhx_button dhx_sidebar-button"
-                    dhx_id="messages"
-                    type="button"
-                  >
-                    <span
-                      class="mdi mdi-email-mark-as-unread dhx_sidebar-button__icon"
-                    ></span
-                    ><span class="dhx_sidebar-button__text">Messages</span>
-                    <div
-                      class="dhx_navbar-count  dhx_sidebar-button__count dhx_navbar-count--color_danger"
-                    >
-                      18
-                    </div>
-                  </button>
-                </li>
-                <li class="dhx_sidebar__item">
-                  <button
-                    class="dhx_button dhx_sidebar-button"
-                    dhx_id="media"
-                    type="button"
-                  >
-                    <span
-                      class="mdi mdi-folder-multiple-image dhx_sidebar-button__icon"
-                    ></span
-                    ><span class="dhx_sidebar-button__text">Media</span>
-                  </button>
-                </li>
-                <li class="dhx_sidebar__item">
-                  <button
-                    class="dhx_button dhx_sidebar-button"
-                    dhx_id="links"
-                    type="button"
-                  >
-                    <span class="mdi mdi-link dhx_sidebar-button__icon"></span
-                    ><span class="dhx_sidebar-button__text">Links</span>
-                  </button>
-                </li>
-                <li class="dhx_sidebar__item">
-                  <button
-                    class="dhx_button dhx_sidebar-button dhx_sidebar-button--select"
-                    dhx_id="comments"
-                    type="button"
-                  >
-                    <span
-                      class="mdi mdi-comment-multiple-outline dhx_sidebar-button__icon"
-                    ></span
-                    ><span class="dhx_sidebar-button__text">Comments</span>
-                    <div
-                      class="dhx_navbar-count  dhx_sidebar-button__count dhx_navbar-count--color_primary dhx_navbar-count--overlimit"
-                    >
-                      118
-                    </div>
-                    <span
-                      class="dxi dxi-menu-right  dhx_sidebar-button__caret"
-                    ></span>
-                  </button>
-                </li>
-                <li class="dhx_sidebar__item">
-                  <button
-                    class="dhx_button dhx_sidebar-button"
-                    dhx_id="notification"
-                    type="button"
-                  >
-                    <span class="mdi mdi-bell dhx_sidebar-button__icon"></span
-                    ><span class="dhx_sidebar-button__text">Notification</span>
-                    <div
-                      class="dhx_navbar-count  dhx_sidebar-button__count dhx_navbar-count--color_primary"
-                    >
-                      25
-                    </div>
-                  </button>
-                </li>
-                <li class="dhx_sidebar__item">
-                  <button
-                    class="dhx_button dhx_sidebar-button dhx_sidebar-button--select"
-                    dhx_id="configuration"
-                    type="button"
-                  >
-                    <span
-                      class="mdi mdi-settings dhx_sidebar-button__icon"
-                    ></span
-                    ><span class="dhx_sidebar-button__text">Configuration</span
-                    ><span
-                      class="dxi dxi-menu-right  dhx_sidebar-button__caret"
-                    ></span>
-                  </button>
-                </li>
-              </ul>
-            </nav>
+    <header class="dhx_sample-header">
+      <div class="dhx_sample-header__main">
+        <h1 class="dhx_sample-header__title">
+          <div class="dhx_sample-header__content">
+            Santi Dashboard - SG Pontevedra
           </div>
-          <div
-            aria-labelledby="tab-content-content"
-            class="dhx_layout-cell dhx_layout-cell--gravity"
-          >
-            <div class="dhx_layout-cell-content">
-              <h1>DHTMLX Sidebar Demo</h1>
-              <p>
-                This is an interactive demonstration of dhtmlxSidebar
-                functionality. The demo represents a JavaScript sidebar on the
-                left side of the page together with
-                <a href="https://dhtmlx.com/docs/products/dhtmlxToolbar/"
-                  >dhtmlxToolbar </a
-                >(on top) and
-                <a href="https://dhtmlx.com/docs/products/dhtmlxLayout/"
-                  >dhtmlxLayout</a
-                >. The sidebar contains:
-              </p>
-              <ul>
-                <li>navigation items equipped with icons</li>
-                <li>separators</li>
-                <li>spacers</li>
-                <li>blue and red notification badges with numbers</li>
-              </ul>
-              <p>The toggle button allows you to collapse the sidebar.</p>
-              <p>
-                Try DHTMLX sidebar
-                <a
-                  href="https://dhtmlx.com/docs/products/dhtmlxSidebar/#offer"
-                  class="js-to-anchor"
-                  >free for 30 days</a
-                >.
-              </p>
-            </div>
-          </div>
-        </div>
+        </h1>
       </div>
-    </div>
+    </header>
+    <section class="dhx_sample-container">
+      <div class="dhx_sample-container__widget" id="sidebar"></div>
+    </section>
+    <script>
+      var sidebar = new dhx.Sidebar("sidebar", {
+        css: "dhx_widget--border_right"
+      });
+      sidebar.data.load("{% static 'data/struct.json' %}").then(function() {
+        sidebar.data.add(
+          {
+            id: "toggle",
+            css: "toggle-button",
+            icon: "mdi mdi-backburger"
+          },
+          sidebar.data.getIndex("dashboard")
+        );
 
-    <script>
-        var layout = new dhx.Layout("demo_root", {
-            width: "1220px",
-            height: "675px",
-            css: "dhx_layout-cell--bordered",
-            rows: [
-                { id: "toolbar-demo", gravity: false },
-                {
-                    cols: [
-                        { id: "sidebar-demo", gravity: false },
-                        { 
-                            id: "content",
-                            html: '<h1>DHTMLX Sidebar Demo</h1><p>This is an interactive demonstration of dhtmlxSidebar functionality. The demo represents a JavaScript sidebar on the left side of the page together with <a href="https://dhtmlx.com/docs/products/dhtmlxToolbar/">dhtmlxToolbar </a>(on top) and <a href="https://dhtmlx.com/docs/products/dhtmlxLayout/">dhtmlxLayout</a>. The sidebar contains: </p><ul><li>navigation items equipped with icons</li><li>separators</li><li>spacers</li><li>blue and red notification badges with numbers</li></ul><p>The toggle button allows you to collapse the sidebar.</p><p>Try DHTMLX sidebar <a href="#offer" class="js-to-anchor">free for 30 days</a>.</p>'
-                        }
-                    ]
-                }
-            ]
-        });
-        var sidebar = new dhx.Sidebar("sidebar-demo", {
-            css: "dhx_widget--border_right dhx_widget--bg_white"
-        });
-        var toolbar = new dhx.Toolbar("toolbar-demo", {
-            css: "dhx_widget--border_bottom dhx_widget--bg_white",
-            data: [
-                {
-                    type: "button",
-                    color: "secondary",
-                    view: "link",
-                    circle: true,
-                    id: "toggle",
-                    icon: "mdi mdi-menu",
-                    tooltip: "Toggle"
-                },
-                {
-                    type: "title",
-                    value: "DHTMLX Sidebar demo"
-                },
-                { type: "spacer" },
-            ]
-        });
-        toolbar.events.on("click", function(id) {
-            if (id === "toggle") {
-                sidebar.toggle();
-            }
-        });
-        layout.cell("toolbar-demo").attach(toolbar);
-    </script>
-    <script>
-      // creating dhtmlxSidebar
-      var sidebar = new dhx.Sidebar("sidebar_container");
+        sidebar.data.add(
+          {
+            type: "customHTML",
+            id: "userInfo",
+            css: "user-info_item",
+            html:
+              "<div class='user-info_container'>" +
+              "<img class='user-info_avatar' src='../common/ava.png'/>" +
+              "<div class='user-info_title'>" +
+              "Gloria McKinney" +
+              "</div>" +
+              "<div class='user-info_contact'>" +
+              "@gmckinney" +
+              "</div>" +
+              "</div>"
+          },
+          sidebar.data.getIndex("dashboard")
+        );
+      });
+      sidebar.events.on("click", function(id) {
+        if (id === "toggle") {
+          var toggleItem = sidebar.data.getItem("toggle");
+          var userInfo = document.querySelector(".user-info_item");
+
+          sidebar.toggle();
+
+          if (sidebar.config.collapsed) {
+            toggleItem.icon = "mdi mdi-menu";
+          } else {
+            toggleItem.icon = "mdi mdi-backburger";
+          }
+        }
+      });
     </script>
   </body>
 </html>
