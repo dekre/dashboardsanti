@@ -2,7 +2,6 @@ name: venv_santi_dashboard
 channels:
   - conda-forge
   - anaconda
-  - blaze
 dependencies:
   - pip
   - python==3.7
@@ -10,3 +9,5 @@ dependencies:
   - pandas
   - numpy
   - sqlite3
+  - nodejs
+  - pyinstaller
