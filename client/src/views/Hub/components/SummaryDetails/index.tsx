@@ -1,7 +1,17 @@
 import React, { Component, Fragment } from "react";
-import { Typography, Paper } from "@material-ui/core";
+import {
+  Typography,
+  Paper,
+  Card,
+  CardHeader,
+  CardMedia,
+  CardContent,
+  CardActions,
+  IconButton,
+} from "@material-ui/core";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import clsx from "clsx";
 import Skeleton from "@material-ui/lab/Skeleton";
-
 
 export interface Props {}
 
@@ -13,12 +23,21 @@ export default class ViewComponent extends Component {
   render() {
     return (
       <Fragment>
-          <Paper elevation={3} style={{ padding: 12 }}>
-          <Typography variant="h6">Summary Details</Typography>
-          <Skeleton variant="text" />
-          <Skeleton variant="circle" width={40} height={40} />
-          <Skeleton variant="rect" height={240} />
-        </Paper>     
+        <Card elevation={3}>
+          <CardHeader
+            action={
+              <IconButton aria-label="settings">
+                <MoreVertIcon />
+              </IconButton>
+            }
+            title={<Typography variant="h6">Summary Details</Typography>}
+          />
+          <CardContent>
+            <Skeleton variant="text" />
+            <Skeleton variant="circle" width={40} height={40} />
+            <Skeleton variant="rect" height={240} />
+          </CardContent>
+        </Card>
       </Fragment>
     );
   }
