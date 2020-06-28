@@ -3,7 +3,7 @@ import { Grid, Typography, Paper } from "@material-ui/core";
 
 export interface Props {}
 
-export default class FilterControl extends Component {
+export default class ViewComponent extends Component {
   constructor({}: Props) {
     super({});
     this.state = {};

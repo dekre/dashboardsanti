@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { Typography, Paper } from "@material-ui/core";
-import Skeleton from "@material-ui/lab/Skeleton";
+import Skeleton from '@material-ui/lab/Skeleton';
 
 export interface Props {}
 
@@ -12,12 +12,12 @@ export default class ViewComponent extends Component {
   render() {
     return (
       <Fragment>
-          <Paper elevation={3} style={{ padding: 12 }}>
-          <Typography variant="h6">Traing Overview</Typography>
+          <Paper elevation={3} style={{padding: 12}}>            
+          <Typography variant="h6">KPI - Performance Metrics</Typography>
           <Skeleton variant="text" />
           <Skeleton variant="circle" width={40} height={40} />
-          <Skeleton variant="rect" height={60} />
-        </Paper>       
+          <Skeleton variant="rect"  height={60}/>
+          </Paper>
       </Fragment>
     );
   }

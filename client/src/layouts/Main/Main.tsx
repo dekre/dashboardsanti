@@ -42,8 +42,9 @@ const Main = ({children}: Props) => {
     >
       <Topbar/> 
       <main className={classes.content}>
+      <div style={{ padding: 24 , marginLeft: 72}}>
         {children}
-        {/* <Footer /> */}
+      </div>                
       </main>
     </div>
   );

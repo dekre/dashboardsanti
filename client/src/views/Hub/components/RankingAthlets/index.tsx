@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { Typography, Paper } from "@material-ui/core";
+import Skeleton from '@material-ui/lab/Skeleton';
 
 export interface Props {}
 
@@ -11,9 +12,12 @@ export default class FilterControl extends Component {
   render() {
     return (
       <Fragment>
-          <Paper elevation={3}>
-          <Typography variant="h3">Ranking: Top Athlets Preview</Typography>
-          </Paper>        
+          <Paper elevation={3} style={{padding: 12}}>            
+          <Typography variant="h6">Ranking - Top Athlets</Typography>
+          <Skeleton variant="text" />
+          <Skeleton variant="circle" width={40} height={40} />
+          <Skeleton variant="rect"  height={240}/>
+          </Paper>
       </Fragment>
     );
   }
