@@ -20,6 +20,7 @@ import ZooIcon from "@material-ui/icons/List";
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import MenuIcon from "@material-ui/icons/Menu";
 import HubIcon from "@material-ui/icons/DeviceHub";
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import SettingsIcon from "@material-ui/icons/Settings";
 
 const drawerWidth = 240;
@@ -53,6 +54,9 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth,
     flexShrink: 0,
     whiteSpace: 'nowrap',
+    paper: {
+      background: 'blue',
+    }    
   },
   drawerOpen: {
     width: drawerWidth,
@@ -167,12 +171,21 @@ const Topbar = ({ className, onSidebarOpen, rest }: Props) => {
         <div className={classes.toolbar}>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (
-              <DashboardIcon />
+              <ChevronLeftIcon />
             ) : (
-              <DashboardIcon />
+              <ChevronLeftIcon />
             )}
           </IconButton>
-        </div>        
+        </div>  
+        <Divider />
+        <List>
+          {['Overview'].map((text, index) => (
+            <ListItem button key={text}>
+              <ListItemIcon>{index % 2 === 0 ? <DashboardIcon /> : <DashboardIcon />}</ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>           
       </Drawer>
     </div>
   );
