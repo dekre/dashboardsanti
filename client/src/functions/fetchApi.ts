@@ -1,9 +1,3 @@
-// const API =
-//   'http://' + process.env.DJBACK_HOST + ':' + process.env.DJBACK_PORT + '/';
-// const APICREATE = API + process.env.DJBACK_CREATE;
-// const APIDELETE = API + process.env.DJBACK_DELETE;
-// const APICOMPUTE = API + process.env.DJBACK_COMPUTE;
-// TODO READ FROM SECRET / ENV / CONFIG / ....
 const API = 'http://localhost:4242/';
 const APIMEDIA = API + 'media/';
 const APICREATE = API + 'api/create';
