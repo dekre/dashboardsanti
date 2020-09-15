@@ -117,10 +117,10 @@ class ViewQuery(BaseQuery):
         return self._aggregations
 
 
-class CreateQuery(BaseQuery):
+class WriteQuery(BaseQuery):
 
     def __init__(self, qry: dict):
-        super(CreateQuery, self).__init__(qry)
+        super(WriteQuery, self).__init__(qry)
         self._init_defaults(qry)
         self._init_files(qry)
         self._init_file_field_name(qry)
@@ -165,25 +165,26 @@ class DeleteQuery(BaseQuery):
 
 class QueryFactory(object):
 
-    def __init__(self):
-        pass
+    def __init__(self, qry: dict):
+        self.qry = qry
 
     def __call__(self):
         for func in dir(cls):
             if '_qry_type' in dir(getattr(cls, func)):
-                if getattr(cls, func)._qry_type == qry["type"]:
+                if getattr(cls, func)._qry_type == self.qry["type"]:
                     func_ = getattr(cls, func)
-                    return func_(qry)
+                    return func_(self.qry)
+        raise ValueError("Unkown query type provided for {}".format(qry["name"]))
 
-    @collector("view")
+    @collector("view", "_qry_type")
     def _create_qry(self, qry: dict):
         return ViewQuery(qry)
 
-    @collector("create")
+    @collector("write", "_qry_type")
     def _view_qry(self, qry: dict):
-        return CreateQuery(qry)
+        return WriteQuery(qry)
 
-    @collector("delete")
+    @collector("delete", "_qry_type")
     def _delete_qry(self, qry: dict):
         return DeleteQuery(qry)
 
@@ -197,7 +198,7 @@ class CoreComputeEngine(object):
         queries = self._cast_queries_to_dict(self.queries)
         querysets = list()
         for q in queries:
-            qry = Query(qry)
+            qry = QueryFactory(q)
             querysets.append(self._qry_data(qry))
         serializer = GenericResultSet(querysets, many=True)
         return serializer.data
@@ -205,15 +206,15 @@ class CoreComputeEngine(object):
     @property
     def queries(self):
         return self._queries
-
+        
     @classmethod
-    def _qry_data(cls, qry: dict):
+    def _qry_data(cls, qry: QueryFactory):
         for func in dir(cls):
-            if '_qry_tag' in dir(getattr(cls, func)):
-                if getattr(cls, func)._qry_tag == qry["type"]:
+            if '_qry_method' in dir(getattr(cls, func)):
+                if getattr(cls, func)._qry_method == qry["method"]:
                     func_ = getattr(cls, func)
                     return func_(qry)
-        return {"result": {"error": "Unkown query type"}, "name": qry["name"]}
+        raise ValueError("Unkown query method provided for {}".format(qry["name"]))        
 
     def _cast_queries_to_dict(self, queries: str) -> dict:
         q = ast.literal_eval(queries)

@@ -1,4 +1,4 @@
-name: venv_santi_dashboard
+name: dashboard_santi
 channels:
   - conda-forge
   - anaconda
@@ -6,8 +6,9 @@ dependencies:
   - pip
   - python==3.7
   - django
+  - djangorestframework
+  - django_polymorphic
   - pandas
   - numpy
-  - sqlite3
   - nodejs
   - pyinstaller

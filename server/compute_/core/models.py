@@ -3,7 +3,6 @@ from abc import abstractmethod
 from django.utils.translation import gettext_lazy as _
 # from django.contrib.auth.models import Group, Permission
 from django.utils import timezone
-from _kep_backend.settings import AUTH_USER_MODEL
 from django.db import models
 from polymorphic.models import PolymorphicModel
 from polymorphic.managers import PolymorphicManager
@@ -11,7 +10,6 @@ from simple_history.models import HistoricalRecords
 
 class Item(PolymorphicModel):
     is_collection = models.BooleanField(default=False) 
-    log = HistoricalRecords(inherit=True) 
 
     @property    
     def allow_owner(self) -> bool:
@@ -26,7 +24,6 @@ class ModelHierarchy(models.Model):
     parent = models.CharField(max_length=125)
     filter_path_to_child = models.CharField(max_length=500)
     filter_path_to_parent = models.CharField(max_length=500)
-    log = HistoricalRecords(related_name='history')
 
     class Meta:
         unique_together = [["child", "parent","filter_path_to_child","filter_path_to_parent"]]

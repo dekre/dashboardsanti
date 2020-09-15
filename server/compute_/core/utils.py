@@ -4,7 +4,7 @@ qry_base_schema = {
     "table": {
         "type": "<string>",
         "is_null": False,
-        "description": 
+        "description": "Model Refernce"
     }
 }
 
@@ -30,8 +30,9 @@ class collector:
     """
     Decorater for addig a tag to the decorated function. 
     """
-    def __init__(self, tag):
-        self.tag = tag
+    def __init__(self, tag_value: str, func_tag: str):
+        self.tag_value = tag_value
+        self.func_tag = func_tag
         
     def __call__(self, fn, *args, **kwargs):
         fn._collector_tag = self.tag
