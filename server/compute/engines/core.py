@@ -1,18 +1,18 @@
 import ast
 from abc import abstractclassmethod
-from .serializers import GenericResultSet
+from compute.serializers import GenericResultSet
 from .utils import AggregationWrapper, collector
-from django.db.models.functions import *
-from django.db.models import Model, Avg, Max, Min, Sum, Count, F
+from django.apps import apps
+from django.db.models import Model, Avg, Max, Min, Sum, Count, F, Q
 
 
 class BaseQuery(object):
 
     def __init__(self, qry: dict):
         self._qry = qry
-        self.allowed_names = {
+        self._allowed_names = {
             "F": F,
-
+            "Q": Q
         }
         self._init_qry(qry)
 
@@ -53,19 +53,18 @@ class BaseQuery(object):
                     expression["definition"])
         self._expressions = expressions_
 
-    def _eval(expression):
-    """Evaluate a query expression."""
-    # Compile the expression
-    code = compile(expression, "<string>", "eval")
-    # Validate allowed names
-    for name in code.co_names:
-        if name not in self.allowed_names:
-            raise NameError(f"The use of '{name}' is not allowed")
-    return eval(code, {"__builtins__": {}}, self.allowed_names)
+    def _eval(self, expression):
+        """Evaluate a query expression."""
+        # Compile the expression
+        code = compile(expression, "<string>", "eval")
+        # Validate allowed names
+        for name in code.co_names:
+            if name not in self.allowed_names:
+                raise NameError(f"The use of '{name}' is not allowed")
+        return eval(code, {"__builtins__": {}}, self.allowed_names)
 
     def _get_parent(self, qry: dict) -> object:
-        model = self._get_model(qry)
-        obj = model.objects.get(**qry["identifiers"])
+        obj = self.model.objects.get(**qry["identifiers"])
         return obj
 
     @property
@@ -73,12 +72,20 @@ class BaseQuery(object):
         return self._qry
 
     @property
+    def method(self) -> str:
+        return self._qry["method"]
+    
+    @property
+    def name(self) -> str:
+        return self._qry["name"]
+
+    @property
     def model(self) -> Model:
         return self._model
 
     @property
-    def identifiers(self) -> dict:
-        return self._identifiers
+    def identifiers(self) -> Q:
+        return Q(self._identifiers)
 
     @property
     def expressions(self) -> dict:
@@ -86,7 +93,7 @@ class BaseQuery(object):
 
     @property
     def allowed_names(self):
-        return {"F": F}
+        return self._allowed_names
 
     @property
     def parents(self) -> dict:
@@ -96,13 +103,22 @@ class BaseQuery(object):
 class ViewQuery(BaseQuery):
 
     def __init__(self, qry: dict):
-        super(CreateQuery, self).__init__(qry)
-        self.allowed_names.update({"Sum": Sum,
-                                   "Avg": Avg,
-                                   "Max": Max,
-                                   "Min": Min,
-                                   "Count": Count})
+        super(ViewQuery, self).__init__(qry)
+        self._init_allowed_names()
         self._init_aggregations(qry)
+        self._init_categories(qry)
+        self._init_orderby(qry)
+
+    def _init_allowed_names(self):
+        self._allowed_names.update(
+            {
+                "Sum": Sum,
+                "Avg": Avg,
+                "Max": Max,
+                "Min": Min,
+                "Count": Count
+            }
+        )
 
     def _init_aggregations(self, qry: dict):
         aggregations_ = dict()
@@ -110,11 +126,41 @@ class ViewQuery(BaseQuery):
             for aggregation in qry["aggfields"]:
                 aggregations_[aggregation["name"]] = self._eval(
                     aggregation["definition"])
-        self._aggregations = aggregations_
+        self._aggregations = aggregations_    
+
+    def _init_categories(self, qry: dict):
+        categories_ = tuple()
+        if "categories" in qry:
+            categories_ = tuple(qry["categories"])
+        self._categories = categories_
+
+    def _init_orderby(self, qry: dict):
+        orderby_ = tuple()
+        if "orderby" in qry:
+            orderby_ = tuple(qry["orderby"])
+        self._orderby = orderby_
+
+    def _init_top_nrows(self, qry: dict):
+        nrows_ = None
+        if "top" in qry:
+            nrows_ = qry["top"]
+        self._top_nrows = nrows_
 
     @property
-    def aggregations(self):
-        return self._aggregations
+    def aggregations(self) -> dict:
+        return self._aggregations    
+
+    @property
+    def categories(self) -> tuple:
+        return self._categories
+
+    @property
+    def orderby(self) -> tuple:
+        return self._orderby
+
+    @property
+    def top_nrows(self) -> int:
+        return self._top_nrows
 
 
 class WriteQuery(BaseQuery):
@@ -126,23 +172,24 @@ class WriteQuery(BaseQuery):
         self._init_file_field_name(qry)
 
     def _init_defaults(self, qry: dict):
-        defaults_ = self.identifiers
+        defaults_ = self._identifiers
+        defaults_.update(self.parents)
         if "defaults" in qry:
-            defaults_ = qry["defaults"]
-            defaults_.update(self.parents)
+            defaults_.update(qry["defaults"])        
         self._defaults = defaults_
 
     def _init_files(self, qry: dict):
         files_ = list()
         if "files" in qry:
             files_ = qry["files"]
-        self._files = files_
+        self._files = files_        
 
     def _init_file_field_name(self, qry: dict):
         file_field_name_ = str()
         if "file_field_name" in qry:
             file_field_name_ = qry["file_field_name"]
-        self._file_field_name = file_field_name_
+        self._file_field_name = file_field_name_    
+
 
     @property
     def defaults(self) -> dict:
@@ -160,7 +207,7 @@ class WriteQuery(BaseQuery):
 class DeleteQuery(BaseQuery):
 
     def __init__(self, queries: str):
-        super(CreateQuery, self).__init__(queries)
+        super(DeleteQuery, self).__init__(queries)
 
 
 class QueryFactory(object):
@@ -169,12 +216,13 @@ class QueryFactory(object):
         self.qry = qry
 
     def __call__(self):
-        for func in dir(cls):
-            if '_qry_type' in dir(getattr(cls, func)):
-                if getattr(cls, func)._qry_type == self.qry["type"]:
-                    func_ = getattr(cls, func)
+        for func in dir(self):
+            if '_qry_type' in dir(getattr(self, func)):
+                if getattr(self, func)._qry_type == self.qry["type"]:
+                    func_ = getattr(self, func)
                     return func_(self.qry)
-        raise ValueError("Unkown query type provided for {}".format(qry["name"]))
+        raise ValueError(
+            "Unkown query type provided for {}".format(self.qry["name"]))
 
     @collector("view", "_qry_type")
     def _create_qry(self, qry: dict):
@@ -206,15 +254,16 @@ class CoreComputeEngine(object):
     @property
     def queries(self):
         return self._queries
-        
+
     @classmethod
     def _qry_data(cls, qry: QueryFactory):
         for func in dir(cls):
             if '_qry_method' in dir(getattr(cls, func)):
-                if getattr(cls, func)._qry_method == qry["method"]:
+                if getattr(cls, func)._qry_method == qry.method:
                     func_ = getattr(cls, func)
                     return func_(qry)
-        raise ValueError("Unkown query method provided for {}".format(qry["name"]))        
+        raise ValueError(
+            "Unkown query method provided for {}".format(qry.method))
 
     def _cast_queries_to_dict(self, queries: str) -> dict:
         q = ast.literal_eval(queries)

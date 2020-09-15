@@ -1,8 +1,5 @@
-import json
-from datetime import datetime
-from django.apps import apps
-from compute.utils.collections import collector
-from compute.core.engines import CoreComputeEngine
+from .utils import collector
+from .core import CoreComputeEngine, ViewQuery
 
 
 class ComputeView(CoreComputeEngine):    
@@ -10,55 +7,40 @@ class ComputeView(CoreComputeEngine):
     def __init__(self, queries: str):
         super(ComputeView, self).__init__(queries)
     
-    @collector("multiset")
-    def _compute_multiset(self, qry: dict) -> list:
-        try:
-            nrows = qry["top"]
-        except:
-            nrows = None
-        model = self._get_model(qry)
-        expressions = self._get_expressions(qry)
-        aggregations = self._get_agg_args(qry)        
-        filters = Q(**qry["filters"])
+    @collector("_qry_method","multiset")
+    def _compute_multiset(self, qry: ViewQuery) -> dict:        
         res = (
-            model.objects.values(**expressions)
-            .filter(filters)
-            .values(*tuple(qry["categories"]))
-            .annotate(**aggregations)
-            .order_by(*tuple(qry["orderby"]))[:nrows]
+            qry.model.objects.values(**qry.expressions)
+            .filter(qry.identifiers)
+            .values(*qry.categories)
+            .annotate(**qry.aggregations)
+            .order_by(*qry.orderby)[:qry.top_nrows]
         )
-        res = {"result": [e for e in res], "name": qry["name"]}
+        res = {"result": [e for e in res], "name": qry.name, "method": qry.method}
         return res
 
-    @collector("scalar")
-    def _compute_scalar(self, qry: dict) -> list:
-        model = self._get_model(qry)
-        aggregations = self._get_agg_args(qry)
-        expressions = self._get_expressions(qry)
-        filters = Q(**qry["filters"])
+    @collector("_qry_method","scalar")
+    def _compute_scalar(self, qry: ViewQuery) -> dict:        
         res = (
-            model.objects.values(**expressions)
-            .filter(filters)
-            .aggregate(**aggregations)
+            qry.model.objects.values(**qry.expressions)
+            .filter(qry.identifiers)
+            .aggregate(**qry.aggregations)
         )
         # TODO fast fix, output needs to be a list
-        res = {"result": [res], "name": qry["name"]}
+        res = {"result": [res], "name": qry.name, "method": qry.method}
 
         return res
     
-    @collector("list")
-    def _compute_list(self, qry: dict) -> dict:
-        model = self._get_model(qry)
-        expressions = self._get_expressions(qry)
-        filters = Q(**qry["filters"])
+    @collector("_qry_method","list")
+    def _compute_list(self, qry: ViewQuery) -> list:        
         res = (
-            model.objects.values(**expressions)
-            .filter(filters)
-            .values(*tuple(qry["categories"]))
-            .order_by(*tuple(qry["orderby"]))
-            .distinct(*tuple(qry["orderby"]))
+            qry.model.objects.values(**qry.expressions)
+            .filter(qry.filters)
+            .values(*qry.categories)
+            .order_by(*qry.orderby)
+            .distinct(*qry.orderby)
         )
-        res = {"result": [e for e in res], "name": qry["name"]}
+        res = {"result": [e for e in res], "name": qry.name, "method": qry.method}
         return res
 
     

@@ -1,7 +1,7 @@
 from django.db.models import Sum, Avg, Max, Min, Count
 
 qry_base_schema = {
-    "table": {
+    "model": {
         "type": "<string>",
         "is_null": False,
         "description": "Model Refernce"
@@ -30,12 +30,12 @@ class collector:
     """
     Decorater for addig a tag to the decorated function. 
     """
-    def __init__(self, tag_value: str, func_tag: str):
+    def __init__(self, func_tag: str, tag_value: str):
         self.tag_value = tag_value
         self.func_tag = func_tag
         
     def __call__(self, fn, *args, **kwargs):
-        fn._collector_tag = self.tag
+        setattr(fn, self.func_tag, self.func_tag)
         return fn
 
 
