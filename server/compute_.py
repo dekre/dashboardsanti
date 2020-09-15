@@ -1,5 +1,5 @@
 # from compute.engine import *
-from compute import settings
+from .backend.settings import *
 import sys, getopt
 
 def main(argv):
