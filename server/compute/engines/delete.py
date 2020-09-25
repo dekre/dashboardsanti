@@ -4,11 +4,11 @@ from django.db.models import Q
 
 
 
-class DeleteView(CoreComputeEngine):  
+class DeleteView(CoreComputeEngine):
 
-    def __init__(self, queries: str):
-        super(DeleteView, self).__init__(queries)
-        
+    def __call__(self, queries: str): 
+        return super(DeleteView, self).__call__(queries)
+
     @collector('_qry_method', 'delete')
     def _delete(self, qry: DeleteQuery) -> list:        
         counter, _ = qry.model.objects.filter(qry.identifiers).delete()

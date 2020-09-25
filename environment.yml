@@ -11,4 +11,5 @@ dependencies:
   - pandas
   - numpy
   - nodejs
+  - pillow
   - pyinstaller

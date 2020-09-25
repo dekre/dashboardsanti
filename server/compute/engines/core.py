@@ -30,10 +30,10 @@ class BaseQuery(object):
 
     def _init_model(self, qry: dict):
         try:
-            models = apps.all_models["apidata"]
-            self._model = models[qry["table"]]
+            models = apps.all_models["compute"]
+            self._model = models[qry["model"]]
         except KeyError:
-            print("Table not specified.")
+            print("Model not specified.")
 
     def _init_parents(self, qry: dict):
         parents_ = dict()
@@ -212,62 +212,52 @@ class DeleteQuery(BaseQuery):
 
 class QueryFactory(object):
 
-    def __init__(self, qry: dict):
-        self.qry = qry
-
-    def __call__(self):
-        for func in dir(self):
-            if '_qry_type' in dir(getattr(self, func)):
-                if getattr(self, func)._qry_type == self.qry["type"]:
+    def __call__(self, qry: dict):
+        for func in dir(self):        
+            if '_qry_type' in dir(getattr(self, func)):                
+                if getattr(self, func)._qry_type == qry["type"]:
                     func_ = getattr(self, func)
-                    return func_(self.qry)
+                    return func_(qry)
         raise ValueError(
-            "Unkown query type provided for {}".format(self.qry["name"]))
+            "Unkown query type provided for {}".format(qry["name"]))
 
-    @collector("view", "_qry_type")
-    def _create_qry(self, qry: dict):
+    @collector("_qry_type", "view")
+    def _view_qry(self, qry: dict):
         return ViewQuery(qry)
 
-    @collector("write", "_qry_type")
-    def _view_qry(self, qry: dict):
+    @collector("_qry_type", "write")
+    def _write_qry(self, qry: dict):
         return WriteQuery(qry)
 
-    @collector("delete", "_qry_type")
+    @collector("_qry_type", "delete")
     def _delete_qry(self, qry: dict):
         return DeleteQuery(qry)
 
 
 class CoreComputeEngine(object):
-
-    def __init__(self, queries: str = None):
-        self._queries = queries
-
-    def __call__(self):
-        queries = self._cast_queries_to_dict(self.queries)
+    
+    def __call__(self, queries: str = None) -> list:
+        queries = self._cast_queries_to_dict(queries)        
         querysets = list()
         for q in queries:
-            qry = QueryFactory(q)
+            Query_ = QueryFactory()
+            qry = Query_(q) 
             querysets.append(self._qry_data(qry))
         serializer = GenericResultSet(querysets, many=True)
         return serializer.data
 
-    @property
-    def queries(self):
-        return self._queries
-
-    @classmethod
-    def _qry_data(cls, qry: QueryFactory):
-        for func in dir(cls):
-            if '_qry_method' in dir(getattr(cls, func)):
-                if getattr(cls, func)._qry_method == qry.method:
-                    func_ = getattr(cls, func)
+    def _qry_data(self, qry: QueryFactory):
+        for func in dir(self):
+            if '_qry_method' in dir(getattr(self, func)):
+                if getattr(self, func)._qry_method == qry.method:
+                    func_ = getattr(self, func)
                     return func_(qry)
         raise ValueError(
             "Unkown query method provided for {}".format(qry.method))
 
     def _cast_queries_to_dict(self, queries: str) -> dict:
         q = ast.literal_eval(queries)
-        if type(q) != dict:
+        if type(q) != list:
             raise ValueError(
                 "Parsing ERROR in queries. Converted type must be dict. You passed {}".format(
                     type(q))

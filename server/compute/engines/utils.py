@@ -35,7 +35,7 @@ class collector:
         self.func_tag = func_tag
         
     def __call__(self, fn, *args, **kwargs):
-        setattr(fn, self.func_tag, self.func_tag)
+        setattr(fn, self.func_tag, self.tag_value)
         return fn
 
 

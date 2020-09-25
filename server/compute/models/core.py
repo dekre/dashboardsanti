@@ -9,15 +9,10 @@ from polymorphic.managers import PolymorphicManager
 from simple_history.models import HistoricalRecords
 
 class Item(PolymorphicModel):
-    is_collection = models.BooleanField(default=False) 
+    is_collection = models.BooleanField(default=False)
 
-    @property    
-    def allow_owner(self) -> bool:
-        """
-        If True, users who match created_by have all permissions to all instances they 
-        created themselves.
-        """        
-        return True
+    class Meta:
+        abstract = True
 
 class ModelHierarchy(models.Model):
     child = models.CharField(max_length=125)

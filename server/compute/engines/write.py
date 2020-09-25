@@ -8,9 +8,10 @@ from backend.settings import MEDIA_ROOT
 
 
 class WriteView(CoreComputeEngine):
-
-    def __init__(self, queries: str):
-        super(WriteView, self).__init__(queries)
+    # PAULA IS THE BEST OMG I LOVE HER SO MUCH I JUST WANT TO SPEND MY LIFE WITH HER!!!!!!!
+    def __call__(self, queries: str): 
+        return super(WriteView, self).__call__(queries)                
+        
 
     def _create_or_update_single_instance(self, qry: WriteQuery) -> (Item, bool,):
         """
@@ -18,7 +19,7 @@ class WriteView(CoreComputeEngine):
         """
         # check if item exists
         try:
-            instance_ = qry.model.objects.get(qry.identifiers)
+            instance_ = qry.model.objects.get(**qry._identifiers)
         except (ObjectDoesNotExist, MultipleObjectsReturned):
             instance_ = None
         # if does not exist, create new

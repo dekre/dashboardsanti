@@ -23,7 +23,8 @@ export default class HubView extends Component {
       <Fragment>
         <Grid container justify="center" spacing={4}>
           <Grid item xs={3}>
-            <KpiDataValidation />
+            <
+               />
           </Grid>
           <Grid item  xs={3}>
             <KpiPerformance />

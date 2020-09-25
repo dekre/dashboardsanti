@@ -4,9 +4,9 @@ from .core import CoreComputeEngine, ViewQuery
 
 class ComputeView(CoreComputeEngine):    
     
-    def __init__(self, queries: str):
-        super(ComputeView, self).__init__(queries)
-    
+    def __call__(self, queries: str): 
+        return super(ComputeView, self).__call__(queries)
+
     @collector("_qry_method","multiset")
     def _compute_multiset(self, qry: ViewQuery) -> dict:        
         res = (
