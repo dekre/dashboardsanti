@@ -8,7 +8,7 @@ class ComputeView(CoreComputeEngine):
         return super(ComputeView, self).__call__(queries)
 
     @collector("_qry_method","multiset")
-    def _compute_multiset(self, qry: ViewQuery) -> dict:        
+    def _compute_multiset(self, qry: ViewQuery) -> dict:                
         res = (
             qry.model.objects.values(**qry.expressions)
             .filter(qry.identifiers)

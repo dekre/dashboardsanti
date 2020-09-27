@@ -85,7 +85,7 @@ class BaseQuery(object):
 
     @property
     def identifiers(self) -> Q:
-        return Q(self._identifiers)
+        return Q(**self._identifiers) & Q(**self.parents)
 
     @property
     def expressions(self) -> dict:
@@ -108,6 +108,7 @@ class ViewQuery(BaseQuery):
         self._init_aggregations(qry)
         self._init_categories(qry)
         self._init_orderby(qry)
+        self._init_top_nrows(qry)
 
     def _init_allowed_names(self):
         self._allowed_names.update(
@@ -172,8 +173,7 @@ class WriteQuery(BaseQuery):
         self._init_file_field_name(qry)
 
     def _init_defaults(self, qry: dict):
-        defaults_ = self._identifiers
-        defaults_.update(self.parents)
+        defaults_ = {}        
         if "defaults" in qry:
             defaults_.update(qry["defaults"])        
         self._defaults = defaults_

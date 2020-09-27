@@ -17,13 +17,14 @@ class WriteView(CoreComputeEngine):
         """
         Saves an item with given defaul values. 
         """
-        # check if item exists
+        # check if item exists        
         try:
-            instance_ = qry.model.objects.get(**qry._identifiers)
+            instance_ = qry.model.objects.get(qry.identifiers)            
         except (ObjectDoesNotExist, MultipleObjectsReturned):
             instance_ = None
         # if does not exist, create new
         if not instance_:
+            qry.defaults.update(qry._identifiers)            
             instance_ = qry.model(**qry.defaults)
             instance_.save()
             return instance_, True
